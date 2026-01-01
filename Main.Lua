@@ -1,105 +1,90 @@
-
-
-    return Library
-end
-
--- BAŞLAT-- [[ MASTER BACON LIBRARY | DELTA FIX ]]
+-- [[ MASTER BACON ULTIMATE | FIXED VERSION ]]
 local Library = {Tabs = {}, Pages = {}}
 local UIS = game:GetService("UserInputService")
 local CoreGui = game:GetService("CoreGui")
+local LP = game.Players.LocalPlayer
 
 function Library:Init(ProjectName)
     if CoreGui:FindFirstChild("MasterBaconUI") then CoreGui.MasterBaconUI:Destroy() end
     local sg = Instance.new("ScreenGui", CoreGui)
     sg.Name = "MasterBaconUI"
-    sg.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
-    local Intro = Instance.new("Frame", sg)
-    Intro.Size = UDim2.new(1, 0, 1, 0)
-    Intro.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    Intro.ZIndex = 10
-    local IntroText = Instance.new("TextLabel", Intro)
-    IntroText.Size = UDim2.new(1, 0, 1, 0)
-    IntroText.BackgroundTransparency = 1
-    IntroText.Text = "MASTER BACON LIBRARY"
-    IntroText.TextColor3 = Color3.fromRGB(255, 80, 80)
-    IntroText.Font = Enum.Font.SourceSansBold
-    IntroText.TextSize = 30
-
+    
     local Main = Instance.new("Frame", sg)
-    Main.Name = "MainFrame"
-    Main.Size = UDim2.new(0, 500, 0, 350)
-    Main.Position = UDim2.new(0.5, -250, 0.5, -175)
-    Main.BackgroundColor3 = Color3.fromRGB(20, 18, 18)
-    Main.Visible = false
-    Main.ZIndex = 5
-    Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 12)
+    Main.Size = UDim2.new(0, 520, 0, 380)
+    Main.Position = UDim2.new(0.5, -260, 0.5, -190)
+    Main.BackgroundColor3 = Color3.fromRGB(15, 12, 12)
+    Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 15)
     Instance.new("UIStroke", Main).Color = Color3.fromRGB(255, 80, 80)
 
-    local Header = Instance.new("Frame", Main)
-    Header.Size = UDim2.new(1, 0, 0, 40)
-    Header.BackgroundTransparency = 1
-    local Title = Instance.new("TextLabel", Header)
-    Title.Text = ProjectName or "MASTER BACON"
-    Title.Size = UDim2.new(1, -100, 1, 0)
-    Title.Position = UDim2.new(0, 15, 0, 0)
-    Title.TextColor3 = Color3.fromRGB(255, 100, 100)
-    Title.Font = Enum.Font.GothamBold
-    Title.TextXAlignment = 0
-    Title.BackgroundTransparency = 1
-
-    local ExitBtn = Instance.new("TextButton", Header)
-    ExitBtn.Size, ExitBtn.Position = UDim2.new(0, 30, 0, 30), UDim2.new(1, -35, 0.5, -15)
-    ExitBtn.Text, ExitBtn.BackgroundColor3, ExitBtn.TextColor3 = "X", Color3.fromRGB(60, 20, 20), Color3.new(1,1,1)
-    Instance.new("UICorner", ExitBtn)
-    local MinBtn = Instance.new("TextButton", Header)
-    MinBtn.Size, MinBtn.Position = UDim2.new(0, 30, 0, 30), UDim2.new(1, -70, 0.5, -15)
-    MinBtn.Text, MinBtn.BackgroundColor3, MinBtn.TextColor3 = "-", Color3.fromRGB(40, 40, 40), Color3.new(1,1,1)
-    Instance.new("UICorner", MinBtn)
-
-    local BaconIcon = Instance.new("TextButton", sg)
-    BaconIcon.Size, BaconIcon.Position = UDim2.new(0, 50, 0, 50), UDim2.new(0, 15, 0.5, -25)
-    BaconIcon.Text, BaconIcon.Visible, BaconIcon.BackgroundColor3 = "🥓", false, Color3.fromRGB(20, 18, 18)
-    Instance.new("UICorner", BaconIcon).CornerRadius = UDim.new(1, 0)
-    Instance.new("UIStroke", BaconIcon).Color = Color3.fromRGB(255, 80, 80)
-
-    task.spawn(function()
-        task.wait(1.5)
-        Intro:Destroy()
-        Main.Visible = true
-    end)
-
-    local function Toggle() Main.Visible = not Main.Visible BaconIcon.Visible = not Main.Visible end
-    ExitBtn.MouseButton1Click:Connect(function() sg:Destroy() end)
-    MinBtn.MouseButton1Click:Connect(Toggle)
-    BaconIcon.MouseButton1Click:Connect(Toggle)
-
     local Sidebar = Instance.new("Frame", Main)
-    Sidebar.Size, Sidebar.Position = UDim2.new(0, 130, 1, -55), UDim2.new(0, 10, 0, 45)
-    Sidebar.BackgroundColor3 = Color3.fromRGB(30, 25, 25)
+    Sidebar.Size, Sidebar.Position = UDim2.new(0, 140, 1, -60), UDim2.new(0, 12, 0, 50)
+    Sidebar.BackgroundColor3 = Color3.fromRGB(25, 18, 18)
     Instance.new("UICorner", Sidebar)
     local layout = Instance.new("UIListLayout", Sidebar)
     layout.Padding = UDim.new(0, 5)
 
-    function Library:CreateTab(Name)
-        local t = Instance.new("TextButton", Sidebar)
-        t.Size, t.Text = UDim2.new(1, -10, 0, 30), Name
-        t.BackgroundColor3, t.TextColor3 = Color3.fromRGB(45, 35, 35), Color3.new(1,1,1)
-        Instance.new("UICorner", t)
-        return t
-    end
+    local Container = Instance.new("Frame", Main)
+    Container.Size, Container.Position = UDim2.new(1, -175, 1, -65), UDim2.new(0, 162, 0, 52)
+    Container.BackgroundTransparency = 1
 
-    local function Drag(gui)
-        local dragging, dragStart, startPos
-        gui.InputBegan:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = true dragStart = input.Position startPos = Main.Position end end)
-        UIS.InputChanged:Connect(function(input) if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then local delta = input.Position - dragStart Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y) end end)
-        UIS.InputEnded:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end end)
+    function Library:CreateTab(Name)
+        local TabBtn = Instance.new("TextButton", Sidebar)
+        TabBtn.Size, TabBtn.Text = UDim2.new(1, 0, 0, 35), Name
+        TabBtn.BackgroundColor3, TabBtn.TextColor3 = Color3.fromRGB(35, 25, 25), Color3.new(1,1,1)
+        Instance.new("UICorner", TabBtn)
+
+        local Page = Instance.new("ScrollingFrame", Container)
+        Page.Size, Page.Visible = UDim2.new(1, 0, 1, 0), false
+        Page.BackgroundTransparency, Page.ScrollBarThickness = 1, 0
+        Instance.new("UIListLayout", Page).Padding = UDim.new(0, 8)
+
+        TabBtn.MouseButton1Click:Connect(function()
+            for _, p in pairs(Library.Pages) do p.Visible = false end
+            Page.Visible = true
+        end)
+        table.insert(Library.Pages, Page)
+        if #Library.Pages == 1 then Page.Visible = true end
+
+        local Elements = {}
+        function Elements:AddButton(Txt, Callback)
+            local Btn = Instance.new("TextButton", Page)
+            Btn.Size, Btn.Text = UDim2.new(1, -10, 0, 35), Txt
+            Btn.BackgroundColor3, Btn.TextColor3 = Color3.fromRGB(45, 30, 30), Color3.new(1,1,1)
+            Instance.new("UICorner", Btn)
+            Btn.MouseButton1Click:Connect(function() pcall(Callback) end)
+        end
+        function Elements:AddToggle(Txt, Callback)
+            local Tgl = Instance.new("TextButton", Page)
+            Tgl.Size, Tgl.Text = UDim2.new(1, -10, 0, 35), "[OFF] " .. Txt
+            Tgl.BackgroundColor3, Tgl.TextColor3 = Color3.fromRGB(30, 30, 30), Color3.new(0.6, 0.6, 0.6)
+            Instance.new("UICorner", Tgl)
+            local State = false
+            Tgl.MouseButton1Click:Connect(function()
+                State = not State
+                Tgl.Text = State and "[ON] " .. Txt or "[OFF] " .. Txt
+                Tgl.TextColor3 = State and Color3.fromRGB(255, 80, 80) or Color3.new(0.6, 0.6, 0.6)
+                pcall(Callback, State)
+            end)
+        end
+        return Elements
     end
-    Drag(Header)
     return Library
 end
 
-local Bacon = Library:Init("MASTER BACON")
-Bacon:CreateTab("Genel")
-Bacon:CreateTab("Ayarlar")
-local 
+local Bacon = Library:Init("MASTER BACON PRO")
+local Hacks = Bacon:CreateTab("Combat")
+local Visuals = Bacon:CreateTab("Visuals")
+
+Hacks:AddButton("Speed 100", function() LP.Character.Humanoid.WalkSpeed = 100 end)
+Hacks:AddButton("Jump 100", function() LP.Character.Humanoid.JumpPower = 100 end)
+
+Visuals:AddToggle("FPS Booster", function(v)
+    for _, obj in pairs(game.Workspace:GetDescendants()) do
+        if v and obj:IsA("BasePart") and not obj:IsDescendantOf(LP.Character) then
+            obj.Transparency = 1
+        elseif not v and obj:IsA("BasePart") then
+            obj.Transparency = 0
+        end
+    end
+end)
+
